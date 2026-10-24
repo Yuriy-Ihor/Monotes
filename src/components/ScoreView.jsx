@@ -61,7 +61,11 @@ const ScoreView = forwardRef(function ScoreView(
         responsive: 'resize',
         staffwidth,
         visualTranspose: transpose,
-        wrap: { minSpacing: 1.1, maxSpacing: 2.6, preferredMeasuresPerLine: staffwidth < 420 ? 2 : staffwidth < 700 ? 3 : 4 },
+        // Unmetered chant uses invisible bars between words, so "measures" are single words
+        // with long melismas: give them more room than metered hymns.
+        wrap: /^M:\s*none/m.test(abc)
+          ? { minSpacing: 2.2, maxSpacing: 3.4, preferredMeasuresPerLine: staffwidth < 420 ? 3 : staffwidth < 700 ? 5 : 8 }
+          : { minSpacing: 1.1, maxSpacing: 2.6, preferredMeasuresPerLine: staffwidth < 420 ? 2 : staffwidth < 700 ? 3 : 4 },
         paddingleft: 8,
         paddingright: 8,
         selectionColor: '#c0392b',

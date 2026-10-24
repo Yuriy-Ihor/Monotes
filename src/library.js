@@ -29,7 +29,9 @@ async function loadBuiltIn() {
   const entries = await Promise.all(
     Object.entries(rawFiles).map(async ([path, load]) => {
       // Vite 2 inlines raw globs as strings; newer Vite returns loader functions.
-      const abc = typeof load === 'function' ? await load() : load;
+      const raw = typeof load === 'function' ? await load() : load;
+      // Files checked out with CRLF on Windows.
+      const abc = raw.replace(/\r\n?/g, '\n');
       const id = 'b-' + path.split('/').pop().replace(/\.abc$/, '');
       return { id, abc, builtIn: true };
     }),
